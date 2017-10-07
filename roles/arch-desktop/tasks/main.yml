@@ -1,0 +1,54 @@
+---
+# tasks file for ansible-arch-desktop/
+
+# tasks file for core
+- package:
+    name: '{{ item }}'
+    with_items:
+      - '{{ pkg_xorg }}'
+      - '{{ pkg_xorg_drivers }}'
+
+
+- name: configure x ressources
+  file:
+    state: link
+    src: /home/michael/src/dotfiles/xorg/.Xresources
+    path: ~/.Xresources
+    force: yes
+  become_user: michael
+  become: yes
+
+- name: install xmonad and required packages for my config
+  package:
+    name: "{{ item }}"
+  with_items:
+    - xmonad
+    - xmonad-contrib
+    - xmonad-utils
+    - stalonetray
+    - xmobar
+
+- name: prepare ~/.xmonad dir
+  file:
+    path: /home/michael/.xmonad
+    state: directory
+  become_user: michael
+  become: yes
+
+- name: link xmonad dotfiles folder to ~/.xmonad
+  file:
+    state: link
+    src: /home/michael/src/dotfiles/xmonad
+    path: /home/michael/.xmonad
+    force: yes
+  become_user: michael
+  become: yes
+
+- name: link stalonetray dotfile to ~/.stalonetray
+  file:
+    state: link
+    src: /home/michael/src/dotfiles/stalonetray/.stalonetrayrc
+    path: /home/michael/.stalonetray
+    force: yes
+  become_user: michael
+  become: yes

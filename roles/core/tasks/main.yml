@@ -1,0 +1,52 @@
+---
+# tasks file for core
+
+- name: set timezone to Canada/Eastern
+  timezone:
+    name: Canada/Eastern
+
+- name: install emacs
+  package:
+    name: emacs
+
+- name: install git
+  package:
+    name: git
+
+- name: clone emacs config
+  git:
+    repo: 'https://github.com/mikefaille/.emacs.d.git'
+    dest: /home/michael/.emacs.d
+    update: no
+  become_user: michael
+  become: yes
+
+- name: create ~/src dir to checkout dotfiles
+  file:
+    path: /home/michael/src
+    state: directory
+  become_user: michael
+  become: yes
+
+- name: clone dotfiles
+  git:
+    repo: https://github.com/mikefaille/dotfiles.git
+    dest: /home/michael/src/dotfiles
+  become_user: michael
+  become: yes
+
+- file:
+    state: link
+    src: /home/michael/src/dotfiles/bash/.bashrc
+    path: /home/michael/.bashrc
+    force: yes
+  become_user: michael
+  become: yes
+
+- file:
+    state: link
+    src: /home/michael/src/dotfiles/bash/.bashrc.d
+    path: /home/michael/.bashrc.d
+    force: yes
+  become_user: michael
+  become: yes
